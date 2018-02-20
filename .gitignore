@@ -1,3 +1,7 @@
 /cs6750_g1/migrations
 /.idea
 /cs6750_g1/.idea
+/cs6750_g1/.DS_Store
+.DS_Store
+/cs6750_g1/cs6750_g1/*.pyc
+/cs6750_g1/.idea/*
