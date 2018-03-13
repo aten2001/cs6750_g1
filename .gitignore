@@ -5,3 +5,4 @@
 .DS_Store
 /cs6750_g1/cs6750_g1/*.pyc
 /cs6750_g1/.idea/*
+app/*.pyc
