@@ -1,11 +1,18 @@
 <?php
 
 
+// Ze
+//-----DB Connection code------
+// $servername = "localhost";
+// $serverUsername = "zw6aw";                         //computing id
+// $serverPassword = "5WrBeQbh";                   //---- your password
+// $database = "zw6aw";              // computing id
+// Leo
 //-----DB Connection code------
 $servername = "localhost";
-$serverUsername = "zw6aw";                         //computing id
-$serverPassword = "5WrBeQbh";                   //---- your password
-$database = "zw6aw";              // computing id
+$serverUsername = "lr3hj";                         //computing id
+$serverPassword = "UVCiZHAG";                   //---- your password
+$database = "lr3hj";              // computing id
 
 
 
@@ -30,21 +37,54 @@ $inputUsername = $inputPassword = $pwd= "";
   <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
   <style>
   .error {color: #FF0000;}
+    /* Referenced from W3Schools - Top Navigation */
+    /* Add a black background color to the top navigation */
+  .topnav {
+      background-color: #333;
+      overflow: hidden;
+      width: 100%;
+  }
+
+  /* Style the links inside the navigation bar */
+  .topnav a {
+      float: left;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+  }
+
+  /* Change the color of links on hover */
+  .topnav a:hover {
+      background-color: #ddd;
+      color: black;
+  }
+
+  /* Add a color to the active/current link */
+  .topnav a.active {
+      background-color: #4CAF50;
+      color: white;
+  }
   </style>
 </head>
 <body style="position: relative; 
-	width: 50%;
-	margin: 0 auto;
-	padding: 10px;
-	background-image: url(bg.jpg);
-	background-size: 100% 620px;
-	background-repeat: repeat;">  
+  margin: 0 auto;
+  background-image: url(bg.jpg);
+  background-size: 100% 620px;
+  background-repeat: repeat;">  
+   <div class="topnav">
+      <a href="index_g1.php">Home</a>
+      <a class="active" href="add_item_g1.php">Add Item</a>
+      <a href="update_inventory_g1.php">Inventory</a>
+      <a href="view_tables_g1.php">View Tables</a>
+  </div> 
 <h2 style="text-align: center; 
   font-family: 'Josefin Sans', cursive;
   display: block;
 	color: #000066;
 	font-size: 58px;
-	font-weight: bold;"> Database Project Group_1 </h2>
+	font-weight: bold;"> Add Item </h2>
 <hr> 
 <h2 style="text-align: center; font-family: 'Josefin Sans', cursive; color: #FF6600;font-size: 30px;"> Operations Here</h2>
 <hr>
