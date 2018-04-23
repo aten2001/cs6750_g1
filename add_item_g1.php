@@ -79,39 +79,63 @@ $inputUsername = $inputPassword = $pwd= "";
       <a href="update_inventory_g1.php">Inventory</a>
       <a href="view_tables_g1.php">View Tables</a>
   </div> 
-<h2 style="text-align: center; 
-  font-family: 'Josefin Sans', cursive;
-  display: block;
-	color: #000066;
-	font-size: 58px;
-	font-weight: bold;"> Add Item </h2>
-<hr> 
-<h2 style="text-align: center; font-family: 'Josefin Sans', cursive; color: #FF6600;font-size: 30px;"> Operations Here</h2>
-<hr>
+  <div class="content" style="padding-left: 20px; padding-right: 20px;">
+      <h1 style="text-align: left; 
+        display: block;
+      	color: #000066;
+      	font-weight: bold;">Add Item</h1>
+      <hr> 
+      <b style="text-align: left; font-size: 18px;">Fill out the form below to add an item to the database. All fields marked with an '*' are required.</b>
+      <hr>
 
-<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+      <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
 
-  Name:
-  <br>
-  <input type="text" name="inputUsername" value="<?php echo $inputUsername;?>">
-  <span class="error"> <?php echo $nameErr;?></span>
-  <br>
+        Name:*
+        <br>
+        <input type="text" name="inputItemName" value="<?php echo $inputItemName;?>" required>
+        <span class="error"> <?php echo $nameErr;?></span>
+        <br>
 
-  Password:
-  <br>
-  <input type="text" name="inputPassword" value="<?php echo $inputPassword;?>">
-  <span class="error"> <?php echo $passErr;?></span>
-  <br>
+        Price:*
+        <br>
+        <input type="text" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
+        <br>
 
-  <br>
-  <input type="submit" name="submit" value="Submit">  
-</form>
+        Discount Rate:
+        <br>
+        <input type="text" name="inputItemPrice" value="<?php echo $inputItemPrice;?>">
+        <br>
+
+        Inventory:*
+        <br>
+        <input type="text" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
+        <br>
+        
+        Category:*
+        <br>
+        <select name="item_category" id="id_item_category" required>
+          <option value="">Choose a category</option>
+
+          <option value="1">Electronics</option>
+
+          <option value="2">Grocery</option>
+
+          <option value="3">Clothes</option>
+
+          <option value="4">Home</option>
+        </select>
+        <br>
+
+        <br>
+        <input type="submit" name="submit" value="Submit">  
+      </form>
+  </div>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
-	$inputUsername = $_POST["inputUsername"];
-	$inputPassword = $_POST["inputPassword"];
+	$inputUsername = $_POST["inputItemName"];
+	$inputPassword = $_POST["inputItemPrice"];
 	//echo $inputUsername . "<br>";
 
 }
@@ -144,12 +168,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   if($pwd == $inputPassword)
     //HINT: Which variable did you use to store your password obtained from the SQL query 
   {
-  echo "Connection success!";
+  echo "&#9;Connection success!";
   // you can add code to jump to welcome page
   }
   else
   {
-  echo "Password or username is incorrect";
+  echo "&#9;Password or username is incorrect";
   }
 }
 
