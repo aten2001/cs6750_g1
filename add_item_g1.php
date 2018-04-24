@@ -3,16 +3,16 @@
 
 // Ze
 //-----DB Connection code------
-// $servername = "localhost";
-// $serverUsername = "zw6aw";                         //computing id
-// $serverPassword = "5WrBeQbh";                   //---- your password
-// $database = "zw6aw";              // computing id
+$servername = "localhost";
+$serverUsername = "zw6aw";                         //computing id
+$serverPassword = "5WrBeQbh";                   //---- your password
+$database = "zw6aw";              // computing id
 // Leo
 //-----DB Connection code------
-$servername = "localhost";
-$serverUsername = "lr3hj";                         //computing id
-$serverPassword = "UVCiZHAG";                   //---- your password
-$database = "lr3hj";              // computing id
+//$servername = "localhost";
+//$serverUsername = "lr3hj";                         //computing id
+//$serverPassword = "UVCiZHAG";                   //---- your password
+//$database = "lr3hj";              // computing id
 
 
 
@@ -103,12 +103,12 @@ $inputUsername = $inputPassword = $pwd= "";
 
         Discount Rate:
         <br>
-        <input type="text" name="inputItemPrice" value="<?php echo $inputItemPrice;?>">
+        <input type="text" name="inputItemDiscount" value="<?php echo $inputItemDiscount;?>">
         <br>
 
         Inventory:*
         <br>
-        <input type="text" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
+        <input type="text" name="inputItemInventory" value="<?php echo $inputItemInventory;?>" required>
         <br>
         
         Category:*
@@ -125,62 +125,36 @@ $inputUsername = $inputPassword = $pwd= "";
           <option value="4">Home</option>
         </select>
         <br>
-
+ 
         <br>
-        <input type="submit" name="submit" value="Submit">  
+        <input type="submit" name="submit" value="Insert">  
       </form>
   </div>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
-	$inputUsername = $_POST["inputItemName"];
-	$inputPassword = $_POST["inputItemPrice"];
-	//echo $inputUsername . "<br>";
+    $inputItemName = $_POST['inputItemName'];
+    $inputItemPrice = $_POST['inputItemPrice'];
+    $inputItemDiscount = $_POST['inputItemDiscount'];
+    $inputItemInventory = $_POST['inputItemInventory'];
+    $item_category = $_POST['item_category'];
+    //echo $inputUsername . "<br>";
 
 }
 
-
-//$sql = "Select * from Login WHERE username = \"" . $inputUsername . "\"";  
-// HINT: your SQL Query to get the row with given username
-// Is it Select or Insert or Delete or Alter? 
-
-$sql = "Select OrderID from Orders WHERE TrackingNumber > 500";
+$str = $id_item_category . "\n";
+echo $str;
 
 
-$result = $conn->query($sql);
-
-
-if ($result->num_rows > 0) 
-{
-	
-    // output data of each row -- here we have one or 0 rows because username is primary key
-    while($row = $result->fetch_assoc()) 
-    {
-        $str = $row["OrderID"] . "\n";
-        echo $str;
-    }
-} 
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-  if($pwd == $inputPassword)
-    //HINT: Which variable did you use to store your password obtained from the SQL query 
-  {
-  echo "&#9;Connection success!";
-  // you can add code to jump to welcome page
-  }
-  else
-  {
-  echo "&#9;Password or username is incorrect";
-  }
+//adding item should be adding record to the item table
+//$sql = "INSERT INTO Items VALUES(DEFAULT, $inputItemName, $item_category, $inputItemPrice, $inputItemDiscount, $inputItemInventory)"
+$sql = "INSERT INTO Items VALUES('DEFAULT','$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
+$result = $conn -> query($sql);
+if (!$result) {
+    printf("Errormessage: %s\n", $conn -> error);
 }
-
-
 ?>
-
-
 
 <?php
 mysqli_close($exit); // HINT: This statement closes the connection with the database
