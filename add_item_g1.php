@@ -97,17 +97,17 @@ $nameErr = "";
 
         Price:*
         <br>
-        <input type="text" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
+        <input type="number" min="0.00" step="0.01" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
         <br>
 
         Discount Rate:
         <br>
-        <input type="text" name="inputItemDiscount" value="<?php echo $inputItemDiscount;?>">
+        <input type="number" min="0.00" max="1.00" step="0.01" name="inputItemDiscount" value="<?php echo $inputItemDiscount;?>">
         <br>
 
         Inventory:*
         <br>
-        <input type="text" name="inputItemInventory" value="<?php echo $inputItemInventory;?>" required>
+        <input type="number" min="0" step="1" name="inputItemInventory" value="<?php echo $inputItemInventory;?>" required>
         <br>
         
         Category:*
@@ -146,10 +146,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     //adding item should be adding record to the item table
     //$sql = "INSERT INTO Items VALUES(DEFAULT, $inputItemName, $item_category, $inputItemPrice, $inputItemDiscount, $inputItemInventory)"
-    $sql = "INSERT INTO Items VALUES('DEFAULT','$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
+    $sql = "INSERT INTO Items VALUES('$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
     $result = $conn -> query($sql);
     if (!$result) {
         printf("Error: %s\n", $conn -> error);
+    }
+    else {
+        printf("Item added successfully.\n");
     }
 }
 ?>
