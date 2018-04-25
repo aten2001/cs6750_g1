@@ -1,35 +1,31 @@
 <?php
-
-
-// Ze
-//-----DB Connection code------
-// $servername = "localhost";
-// $serverUsername = "zw6aw";                         //computing id
-// $serverPassword = "5WrBeQbh";                   //---- your password
-// $database = "zw6aw";              // computing id
-// Leo
+//// Ze
+////-----DB Connection code------
+//// $servername = "localhost";
+//// $serverUsername = "zw6aw";                         //computing id
+//// $serverPassword = "5WrBeQbh";                   //---- your password
+//// $database = "zw6aw";              // computing id
+//// Leo
 //-----DB Connection code------
 $servername = "localhost";
 $serverUsername = "lr3hj";                         //computing id
 $serverPassword = "UVCiZHAG";                   //---- your password
 $database = "lr3hj";              // computing id
+////-----LOCAL DB Connection code------
+//$servername = "localhost";
+//$serverUsername = "root";
+//$serverPassword = "+Hdz793241923";
+//$database = "group1_database";
 
-
-// Create connection
-$conn = new mysqli($servername, $serverUsername, $serverPassword, $database);
+// create connection
+$conn = mysqli_connect($servername, $serverUsername, $serverPassword, $database);
 // Check connection
-if ($conn->connect_error)
-{
-	die ("Connection failed: ". $conn->connect_error);
-}
-mysql_select_db($serverUsername);
-// ---- VARIABLE DECLARATIONS ----
-$nameErr = "";
-
+if (!$conn) {
+	die("connection failed: " . mysqli_connect_error());
+		}
 ?>
-
-<!DOCTYPE HTML>  
-<html>
+<!DOCTYPE html> 
+<html> 
 <head>
   <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
   <style>
@@ -85,7 +81,24 @@ $nameErr = "";
       <b style="text-align: left; font-size: 18px;">The table below consists of all items currently in the database.</b>
       <hr>
     <table>
-      <thead>
+		<?php			
+			$sql = "SELECT * FROM users";
+			$result = mysqli_query($conn, $sql);
+			
+			$sql1 = "SHOW TABLES;";
+			$result1 = mysqli_query($conn, $sql1);
+			if (mysqli_num_rows($result1) > 0) {
+				$i = 1;
+				$tables = array();
+				while($row = mysqli_fetch_assoc($result1)) {
+					$tables[$i] = $row["Tables_in_group1_database"];
+					$i++;
+				}
+			} else {
+				echo "0 result";
+			}
+			?>
+ <!--     <thead>
         <tr>
           <td>ID</td>
           <td>Name</td>
@@ -96,35 +109,72 @@ $nameErr = "";
         </tr>
       </thead>
       <tbody>
-        <?php
-                $sql = "Select * from Items";
-                $results = $conn->query($sql);
-                while($row = $results->fetch_assoc()) {
-                ?>
-                    <tr>
-                        <td><?php echo $row['ItemID']?></td>
-                        <td><?php echo $row['ItemName']?></td>
-                        <td><?php echo $row['CategoryID']?></td>
-                        <td><?php echo $row['Price']?></td>
-                        <td><?php echo $row['Inventory']?></td>
-                        <?php if ($row['DiscountRate'] == NULL) { ?>
-                        <td><?php echo "None"?></td>
-                        <?php } else { ?>
-                        <td><?php echo $row['DiscountRate']?></td>
-                        <?php } ?>
-                    </tr>
-
-                <?php
-                }
-        ?>
-      </tbody>
+-->
+		<?php
+			$q = isset($_GET['q'])? htmlspecialchars($_GET['q']) : '';
+			//$q = '';
+			?>
+		
+		<form action = "" method = "get">
+			<select name = "q">
+			<option value="">Please select a table</option>
+			<?php
+			foreach($tables as $key => $value):
+			echo '<option value="'.$key.'">'.$value.'</option>';
+			endforeach;
+			?>
+			</select>
+		<input type = "submit" value = "Submit">
+		<form>
+		<?php
+			if($q) {
+				$sql2 = "SHOW COLUMNS FROM ". $tables[$q];
+				//$sql2 = "SHOW COLUMNS FROM users;";
+				$result2 = mysqli_query($conn, $sql2);
+				$num_of_cols = 1;
+				if (mysqli_num_rows($result2) > 0) {
+					$columns = array();
+					echo "<thead>";
+					echo "<tr>";
+					while ($row = mysqli_fetch_assoc($result2)) {
+						$columns[$num_of_cols] = $row["Field"];
+						echo "<td>". $row["Field"]. "</td>";
+						$num_of_cols++;
+					}
+					echo "</tr>";
+					echo "</thead>";
+				echo "<tbody>";
+				$sql3 = "SELECT * FROM ". $tables[$q];
+				//$sql3 = "SELECT * FROM users;";
+				$result3 = mysqli_query($conn, $sql3);
+				if (mysqli_num_rows($result3)) {
+					while($row = mysqli_fetch_assoc($result3)) {
+						$j = 1;
+						echo "<tr>";
+						while ($j <= $num_of_cols - 1) {
+							//echo $columns[$j]. ": ". $row[$columns[$j]]. " ";
+							if($row[$columns[$j]] == NULL) {
+								echo "<td>N/A</td>";
+							} else {
+								echo "<td>". $row[$columns[$j]]. "</td>";
+							}
+							$j++;
+						}
+						echo "</tr>";
+					}
+				}
+				} else {
+					echo "0 result";
+				}
+				echo "</tbody>";
+			} 
+			?>
+		
+		
+		<?php
+			mysqli_close($conn);
+			?>
     </table>
 </div>
-
-
-
-<?php
-mysqli_close($exit); // HINT: This statement closes the connection with the database
-
-ob_end_flush();
-?>
+</body>
+</html>
