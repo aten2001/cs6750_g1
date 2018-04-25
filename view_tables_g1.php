@@ -22,11 +22,9 @@ if ($conn->connect_error)
 {
 	die ("Connection failed: ". $conn->connect_error);
 }
-//echo "Connection success! <br>";
-
+mysql_select_db($serverUsername);
 // ---- VARIABLE DECLARATIONS ----
-$nameErr = $passErr = "";
-$inputUsername = $inputPassword = $pwd= "";
+$nameErr = "";
 
 ?>
 
@@ -99,7 +97,6 @@ $inputUsername = $inputPassword = $pwd= "";
       </thead>
       <tbody>
         <?php
-                mysql_select_db("lr3hj");
                 $sql = "Select * from Items";
                 $results = $conn->query($sql);
                 while($row = $results->fetch_assoc()) {

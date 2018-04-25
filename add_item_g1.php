@@ -9,10 +9,10 @@ $serverPassword = "5WrBeQbh";                   //---- your password
 $database = "zw6aw";              // computing id
 // Leo
 //-----DB Connection code------
-//$servername = "localhost";
-//$serverUsername = "lr3hj";                         //computing id
-//$serverPassword = "UVCiZHAG";                   //---- your password
-//$database = "lr3hj";              // computing id
+$servername = "localhost";
+$serverUsername = "lr3hj";                         //computing id
+$serverPassword = "UVCiZHAG";                   //---- your password
+$database = "lr3hj";              // computing id
 
 
 
@@ -23,11 +23,10 @@ if ($conn->connect_error)
 {
 	die ("Connection failed: ". $conn->connect_error);
 }
-//echo "Connection success! <br>";
+mysql_select_db($serverUsername);
 
 // ---- VARIABLE DECLARATIONS ----
-$nameErr = $passErr = "";
-$inputUsername = $inputPassword = $pwd= "";
+$nameErr = "";
 
 ?>
 
@@ -115,14 +114,15 @@ $inputUsername = $inputPassword = $pwd= "";
         <br>
         <select name="item_category" id="id_item_category" required>
           <option value="">Choose a category</option>
-
-          <option value="1">Electronics</option>
-
-          <option value="2">Grocery</option>
-
-          <option value="3">Clothes</option>
-
-          <option value="4">Home</option>
+          <?php
+          $sql = "Select CategoryName, CategoryID from Categories";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
+            ?>
+            <option value="<?php echo $row['CategoryID'] ?>"><?php echo $row['CategoryName']?></option>
+          <?php 
+          } 
+          ?>
         </select>
         <br>
  
@@ -140,19 +140,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $inputItemInventory = $_POST['inputItemInventory'];
     $item_category = $_POST['item_category'];
     //echo $inputUsername . "<br>";
-
-}
-
-$str = $id_item_category . "\n";
-echo $str;
+    $str = $id_item_category . "\n";
+    echo $str;
 
 
-//adding item should be adding record to the item table
-//$sql = "INSERT INTO Items VALUES(DEFAULT, $inputItemName, $item_category, $inputItemPrice, $inputItemDiscount, $inputItemInventory)"
-$sql = "INSERT INTO Items VALUES('DEFAULT','$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
-$result = $conn -> query($sql);
-if (!$result) {
-    printf("Errormessage: %s\n", $conn -> error);
+    //adding item should be adding record to the item table
+    //$sql = "INSERT INTO Items VALUES(DEFAULT, $inputItemName, $item_category, $inputItemPrice, $inputItemDiscount, $inputItemInventory)"
+    $sql = "INSERT INTO Items VALUES('DEFAULT','$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
+    $result = $conn -> query($sql);
+    if (!$result) {
+        printf("Error: %s\n", $conn -> error);
+    }
 }
 ?>
 
