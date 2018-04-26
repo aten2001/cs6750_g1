@@ -63,6 +63,16 @@ mysql_select_db($serverUsername);
       background-color: #4CAF50;
       color: white;
   }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    height: 80px;
+  }
+  table, th, td {
+   border: 1px solid black;
+  }
   </style>
 </head>
 <body style="position: relative; 
@@ -83,9 +93,8 @@ mysql_select_db($serverUsername);
         color: #000066;
         font-weight: bold;">View Records</h1>
       <hr> 
-      <b style="text-align: left; font-size: 18px;">The table below consists of all items currently in the database.</b>
+      <b style="text-align: left; font-size: 18px;">Select a table to view below.</b>
       <hr>
-    <table>
 		<?php			
 			$sql = "SELECT * FROM users";
 			$result = mysqli_query($conn, $sql);
@@ -102,24 +111,9 @@ mysql_select_db($serverUsername);
 			} else {
 				echo "0 result";
 			}
-			?>
- <!--     <thead>
-        <tr>
-          <td>ID</td>
-          <td>Name</td>
-          <td>Category</td>
-          <td>Price</td>
-          <td>Inventory</td>
-          <td>Discount Rate</td>
-        </tr>
-      </thead>
-      <tbody>
--->
-		<?php
 			$q = isset($_GET['q'])? htmlspecialchars($_GET['q']) : '';
-			//$q = '';
 			?>
-		
+		<!-- HTML form for selecting table -->
 		<form action = "" method = "get">
 			<select name = "q">
 			<option value="">Please select a table</option>
@@ -131,6 +125,10 @@ mysql_select_db($serverUsername);
 			</select>
 		<input type = "submit" value = "Submit">
 		<form>
+    <!-- PHP logic for displaying selected table -->
+    <br>
+    <br>
+    <table>
 		<?php
 			if($q) {
 				$sql2 = "SHOW COLUMNS FROM ". $tables[$q];
