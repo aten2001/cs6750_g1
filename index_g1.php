@@ -188,12 +188,14 @@ mysql_select_db($serverUsername);
         <?php
         if ($_POST['item_category']) {
                 $item_category = $_POST['item_category'];
-                $sql2 = "Select b.CategoryName, a.ItemName, c.Quantity from Items a inner join Categories b 
+                $sql2 = "Select b.CategoryName, a.ItemName, SUM(c.Quantity) from Items a inner join Categories b 
                         on a.CategoryID = b.CategoryID
                         inner join OrderDetails c 
                         on a.ItemID = c.ItemID
                         where b.CategoryName = '". $item_category. "'
-                        Order by c.Quantity DESC;";
+                        GROUP BY a.ItemName
+                        Order by c.Quantity DESC";
+                        
                 $result2 = mysqli_query($conn, $sql2);
                 if (mysqli_num_rows($result2)) {
                     $tables2 = array();
@@ -202,10 +204,10 @@ mysql_select_db($serverUsername);
                         $tables2[$i] = $row2["ItemName"];
                         echo "<tr>";
                             echo "<td>". $row2["ItemName"]. "</td>";
-                            if($row2["Quantity"] == NULL) {
+                            if($row2["SUM(c.Quantity)"] == NULL) {
                                 echo "<td>N/A</td>";
                             } else {
-                                echo "<td>". $row2["Quantity"]. "</td>";
+                                echo "<td>". $row2["SUM(c.Quantity)"]. "</td>";
                             }
                         echo "</tr>";
                         $i++;
