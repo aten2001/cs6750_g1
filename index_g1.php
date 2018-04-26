@@ -142,9 +142,6 @@ mysql_select_db($serverUsername);
              }
        echo "</tbody>";
        ?>
-       <?php
-            mysqli_close($conn);
-       ?>
     </table>
     <br>
 </div>
@@ -157,18 +154,25 @@ mysql_select_db($serverUsername);
       <hr> 
       <b style="text-align: left; font-size: 18px;">See a certain category</b>
       <hr>
-       <form method="GET" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
-            <select name = "item_category" required>
-            <option value="">Please select a Category</option>
-            <?php
-            foreach($tables as $key => $value):
-            echo '<option value="'.$key.'">'.$value.'</option>';
-            endforeach;
+       <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+        
+        <br>
+        <select name="item_category" id="id_item_category" required>
+          <option value="">Choose a category</option>
+          <?php
+          $sql = "Select CategoryName, CategoryID from Categories";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
             ?>
-            </select>
-        <input type = "submit" name="submit" value="SUBMIT">
+            <option value="<?php echo $row['CategoryName'] ?>"><?php echo $row['CategoryName']?></option>
+          <?php 
+          } 
+          ?>
+        </select>
+        <br>
+
+        <input type = "submit" name="submit" value="Submit">
        </form>
-    <br>
     <br>
     <table>
             <thead>
@@ -182,13 +186,13 @@ mysql_select_db($serverUsername);
             </thead>
        <tbody>
         <?php
-        if ($_SERVER["REQUEST_METHOD"] == "GET") {
-                $item_category = $_GET['item_category'];
+        if ($_POST['item_category']) {
+                $item_category = $_POST['item_category'];
                 $sql2 = "Select b.CategoryName, a.ItemName, c.Quantity from Items a inner join Categories b 
                         on a.CategoryID = b.CategoryID
                         inner join OrderDetails c 
                         on a.ItemID = c.ItemID
-                        where b.CategoryName = '$item_category'
+                        where b.CategoryName = '". $item_category. "'
                         Order by c.Quantity DESC;";
                 $result2 = mysqli_query($conn, $sql2);
                 if (mysqli_num_rows($result2)) {
