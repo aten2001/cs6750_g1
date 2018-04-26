@@ -33,7 +33,14 @@ $nameErr = "";
 <!DOCTYPE HTML>  
 <html>
 <head>
-  <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+  
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
   <style>
   .error {color: #FF0000;}
     /* Referenced from W3Schools - Top Navigation */
@@ -74,8 +81,8 @@ $nameErr = "";
   background-repeat: repeat;">  
    <div class="topnav">
       <a href="index_g1.php">Home</a>
-      <a class="active" href="add_item_g1.php">Add Item</a>
-      <a href="update_inventory_g1.php">Inventory</a>
+      <a href="add_item_g1.php">Add Item</a>
+      <a class="active" href="update_inventory_g1.php">Inventory</a>
       <a href="manage_orders_g1.php">Orders</a>
       <a href="view_tables_g1.php">View Tables</a>
   </div> 
