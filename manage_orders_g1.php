@@ -42,6 +42,10 @@ $nameErr = "";
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
   <style>
+  i {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
   .error {color: #FF0000;}
     /* Referenced from W3Schools - Top Navigation */
     /* Add a black background color to the top navigation */
@@ -176,7 +180,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $sql_add_order = "INSERT INTO Orders (UserID, ShipperID, OrderDate, TrackingNumber) VALUES('$user_name','$shipper_name','$OrderDate', '$tracking_number')";
     $result = $conn -> query($sql_add_order);
     if (!$result) {
-        printf("Error adding Order: %s\n", $conn -> error);
+        printf("<p><i>Error adding Order: %s</i></p>\n", $conn -> error);
     }
     else {
         // now add order details record
@@ -184,10 +188,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $sql_add_orderdetail = "INSERT INTO OrderDetails VALUES('$OrderID','$item_name', '$inputOrderQuantity')";
         $result2 = $conn -> query($sql_add_orderdetail);
         if (!$result2) {
-          printf("Error adding OrderDetail: %s\n", $conn -> error);
+          printf("<p><i>Error adding OrderDetail: %s</i></p>\n", $conn -> error);
+          $sql_delete_order = "DELETE FROM Orders WHERE OrderID = '". $OrderID. "'";
+          $result3 = $conn -> query($sql_delete_order);
+          if (!$result3) {
+            printf("<p><i>Error: %s</i></p>\n", $conn -> error);
+          }
+          else {
+            printf("<p><i>Due to this error, the order was removed.</i></p>");
+          }
         }
         else {
-          printf("OrderDetail added successfully.\n");
+          printf("<p><i>OrderDetail added successfully.</i></p>\n");
         }
     }
 }

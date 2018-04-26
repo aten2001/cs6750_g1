@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <?php
 //-----DB Connection code------
 $servername = "localhost";
@@ -220,5 +221,4 @@ mysql_select_db($serverUsername);
     <br>
  </div>
 </body>
-
 </html>

@@ -76,6 +76,16 @@ $nameErr = "";
       background-color: #4CAF50;
       color: white;
   }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    height: 80px;
+  }
+  table, th, td {
+   border: 1px solid black;
+  }
   </style>
 </head>
 <body style="position: relative; 
@@ -101,37 +111,16 @@ $nameErr = "";
 
       <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
 
-        Name:*
+        User:*
         <br>
-        <input type="text" name="inputItemName" value="<?php echo $inputItemName;?>" required>
-        <span class="error"> <?php echo $nameErr;?></span>
-        <br>
-
-        Price:*
-        <br>
-        <input type="number" min="0.00" step="0.01" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
-        <br>
-
-        Discount Rate:
-        <br>
-        <input type="number" min="0.00" max="1.00" step="0.01" name="inputItemDiscount" value="<?php echo $inputItemDiscount;?>">
-        <br>
-
-        Inventory:*
-        <br>
-        <input type="number" min="0" step="1" name="inputItemInventory" value="<?php echo $inputItemInventory;?>" required>
-        <br>
-        
-        Category:*
-        <br>
-        <select name="item_category" id="id_item_category" required>
-          <option value="">Choose a category</option>
+        <select name="inputUsername" id="inputUsername" required>
+          <option value="">Choose an item</option>
           <?php
-          $sql = "Select CategoryName, CategoryID from Categories";
+          $sql = "Select Username, UserID from Users";
           $results = $conn->query($sql);
           while($row = $results->fetch_assoc()) {
             ?>
-            <option value="<?php echo $row['CategoryID'] ?>"><?php echo $row['CategoryName']?></option>
+            <option value="<?php echo $row['UserID'] ?>"><?php echo $row['Username']?></option>
           <?php 
           } 
           ?>
@@ -139,37 +128,89 @@ $nameErr = "";
         <br>
  
         <br>
-        <input type="submit" name="submit" value="Insert">  
+        <input type="submit" name="submit" value="Update">  
       </form>
-  </div>
-
+      <br>
+<!-- show user orderse table -->
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") 
-{
-    $inputItemName = $_POST['inputItemName'];
-    $inputItemPrice = $_POST['inputItemPrice'];
-    $inputItemDiscount = $_POST['inputItemDiscount'];
-    $inputItemInventory = $_POST['inputItemInventory'];
-    $item_category = $_POST['item_category'];
-    //echo $inputUsername . "<br>";
-    $str = $id_item_category . "\n";
-    echo $str;
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        echo "<table>
+  <thead>
+    <tr>
+      <td>Username</td>
+      <td>ItemName</td>
+      <td>Price</td>
+      <td>Quantity</td>
+      <td>OrderDate</td>
+    </tr>
+  </thead>
+  <tbody>";
+          $inputUsername = $_POST['inputUsername'];
 
-
-    // update item
-    $sql_update = "UPDATE Items SET Inventory = '". $inputItemInventory. "' WHERE ItemID = '". $inputItemName. "'";
-    $result = $conn -> query($sql_update);
-    if (!$result) {
-        printf("<p><i>Error: %s</i></p>\n", $conn -> error);
-    }
-    else {
-        printf("<p><i>Item updated successfully.</i></p>\n");
-    }
-}
+        // get user's order history
+        $sql3 = "SELECT Username, ItemName, Price, Quantity, OrderDate FROM (SELECT Username, ItemName, Price, Quantity, OrderDate FROM Users u LEFT JOIN Orders o ON u.UserID = o.UserID LEFT JOIN OrderDetails od ON o.OrderID = od.OrderID LEFT JOIN Items i ON od.ItemID = i.ItemID) t WHERE Username = '". $inputUsername. "'";
+        $result3 = mysqli_query($conn, $sql3);
+        if (mysqli_num_rows($result3)) {
+          while($row = mysqli_fetch_assoc($result3)) {
+            $j = 1;
+            echo "<tr>";
+            while ($j <= 5) {
+              //echo $columns[$j]. ": ". $row[$columns[$j]]. " ";
+              if ($j == 1) {
+                echo $row;
+                // if($row["Username"] == NULL) {
+              //     echo "<td>N/A</td>";
+                // } 
+                // else {
+                  // echo "<td>". $row["Username"]]. "</td>";
+                // }
+              }
+        //       else if ($j == 2) {
+        //         if($row["ItemName"] == NULL) {
+        //           echo "<td>N/A</td>";
+        //         } else {
+        //           echo "<td>". $row["ItemName"]. "</td>";
+        //         }
+        //       }
+        //       else if ($j == 3) {
+        //         if($row["Price"] == NULL) {
+        //           echo "<td>N/A</td>";
+        //         } else {
+        //           echo "<td>". $row["Price"]. "</td>";
+        //         }
+        //       }
+        //       else if ($j == 4) {
+        //         if($row["Quantity"] == NULL) {
+        //           echo "<td>N/A</td>";
+        //         } else {
+        //           echo "<td>". $row["Quantity"]. "</td>";
+        //         }
+        //       }
+        //       else { // $j == 5
+        //         if($row["OrderDate"] == NULL) {
+        //           echo "<td>N/A</td>";
+        //         } else {
+        //           echo "<td>". $row["OrderDate"]. "</td>";
+        //         }
+        //       }
+              $j++;
+            }
+            echo "</tr>";
+          }
+        }
+        else {
+            echo "No results.";
+        }
+      }
+        echo "</tbody>";
 ?>
-
+<!-- close database connection -->
 <?php
 mysqli_close($exit); // HINT: This statement closes the connection with the database
 
 ob_end_flush();
 ?>
+</table>
+</div>
+</body>
+</html>

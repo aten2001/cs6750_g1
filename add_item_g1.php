@@ -42,6 +42,10 @@ $nameErr = "";
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
   <style>
+  i {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
   .error {color: #FF0000;}
     /* Referenced from W3Schools - Top Navigation */
     /* Add a black background color to the top navigation */
@@ -157,10 +161,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     $sql = "INSERT INTO Items (ItemName, CategoryID, Price, DiscountRate, Inventory) VALUES('$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
     $result = $conn -> query($sql);
     if (!$result) {
-        printf("Error: %s\n", $conn -> error);
+        printf("<p><i>Error: %s</i></p>\n", $conn -> error);
     }
     else {
-        printf("Item added successfully.\n");
+        printf("<p><i>Item added successfully.</i></p>\n");
     }
 }
 ?>
