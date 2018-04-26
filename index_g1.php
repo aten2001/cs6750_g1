@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <?php
 //-----DB Connection code------
 $servername = "localhost";
