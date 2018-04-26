@@ -74,6 +74,7 @@ mysql_select_db($serverUsername);
       <a href="index_g1.php">Home</a>
       <a href="add_item_g1.php">Add Item</a>
       <a href="update_inventory_g1.php">Inventory</a>
+      <a href="manage_orders_g1.php">Orders</a>
       <a class="active" href="view_tables_g1.php">View Tables</a>
   </div> 
   <div class="content" style="padding-left: 20px; padding-right: 20px;">

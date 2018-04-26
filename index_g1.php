@@ -44,6 +44,7 @@
       <a class="active" href="index_g1.php">Home</a>
       <a href="add_item_g1.php">Add Item</a>
       <a href="update_inventory_g1.php">Inventory</a>
+      <a href="manage_orders_g1.php">Orders</a>
       <a href="view_tables_g1.php">View Tables</a>
   </div> 
   <h2 style="text-align: center;

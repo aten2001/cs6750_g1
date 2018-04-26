@@ -74,53 +74,70 @@ $nameErr = "";
   background-repeat: repeat;">  
    <div class="topnav">
       <a href="index_g1.php">Home</a>
-      <a class="active" href="add_item_g1.php">Add Item</a>
+      <a href="add_item_g1.php">Add Item</a>
       <a href="update_inventory_g1.php">Inventory</a>
-      <a href="manage_orders_g1.php">Orders</a>
+      <a class="active" href="manage_orders_g1.php">Orders</a>
       <a href="view_tables_g1.php">View Tables</a>
   </div> 
   <div class="content" style="padding-left: 20px; padding-right: 20px;">
       <h1 style="text-align: left; 
         display: block;
         color: #000066;
-        font-weight: bold;">Update Inventory</h1>
+        font-weight: bold;">Manage Orders</h1>
       <hr> 
-      <b style="text-align: left; font-size: 18px;">Fill out the form below to update an item's inventory.</b>
+      <b style="text-align: left; font-size: 18px;">Make an order for a user.</b>
       <hr>
-
+      <table>
       <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
 
-        Name:*
+        User:*
         <br>
-        <input type="text" name="inputItemName" value="<?php echo $inputItemName;?>" required>
-        <span class="error"> <?php echo $nameErr;?></span>
-        <br>
-
-        Price:*
-        <br>
-        <input type="number" min="0.00" step="0.01" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
-        <br>
-
-        Discount Rate:
-        <br>
-        <input type="number" min="0.00" max="1.00" step="0.01" name="inputItemDiscount" value="<?php echo $inputItemDiscount;?>">
-        <br>
-
-        Inventory:*
-        <br>
-        <input type="number" min="0" step="1" name="inputItemInventory" value="<?php echo $inputItemInventory;?>" required>
-        <br>
-        
-        Category:*
-        <br>
-        <select name="item_category" id="id_item_category" required>
-          <option value="">Choose a category</option>
+        <select name="user_name" id="id_user_name" required>
+          <option value="">Choose a user</option>
           <?php
-          $sql = "Select CategoryName, CategoryID from Categories";
+          $sql = "Select Username, UserID from Users";
           $results = $conn->query($sql);
           while($row = $results->fetch_assoc()) {
             ?>
-            <option value="<?php echo $row['CategoryID'] ?>"><?php echo $row['CategoryName']?></option>
+            <option value="<?php echo $row['UserID'] ?>"><?php echo $row['Username']?></option>
+          <?php 
+          } 
+          ?>
+        </select>
+        <br>
+
+        Item:*
+        <br>
+        <select name="item_name" id="id_item_name" required>
+          <option value="">Choose an item</option>
+          <?php
+          $sql = "Select ItemName, ItemID from Items";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
+            ?>
+            <option value="<?php echo $row['ItemID'] ?>"><?php echo $row['ItemName']?></option>
+          <?php 
+          } 
+          ?>
+        </select>
+        <br>
+
+        Quantity:*
+        <br>
+        <input type="number" min="0" step="1" name="inputOrderQuantity" value="<?php echo $inputOrderQuantity;?>" required>
+        <br>
+
+
+        Shipper:*
+        <br>
+        <select name="shipper_name" id="id_shipper_name" required>
+          <option value="">Choose a shipper</option>
+          <?php
+          $sql = "Select ShipperName, ShipperID from Shippers";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
+            ?>
+            <option value="<?php echo $row['ShipperID'] ?>"><?php echo $row['ShipperName']?></option>
           <?php 
           } 
           ?>
@@ -129,32 +146,43 @@ $nameErr = "";
  
         <br>
         <input type="submit" name="submit" value="Insert">  
+      
+
+
       </form>
+    </table>
   </div>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
-    $inputItemName = $_POST['inputItemName'];
-    $inputItemPrice = $_POST['inputItemPrice'];
-    $inputItemDiscount = $_POST['inputItemDiscount'];
-    $inputItemInventory = $_POST['inputItemInventory'];
-    $item_category = $_POST['item_category'];
-    //echo $inputUsername . "<br>";
-    $str = $id_item_category . "\n";
-    echo $str;
+    $inputOrderQuantity = $_POST['inputOrderQuantity'];
+    $item_name = $_POST['item_name'];
+    $user_name = $_POST['user_name'];
+    $shipper_name = $_POST['shipper_name'];
+    // get tracking number (randomly generated 8 digit number)
+    $tracking_number = rand(10000000, 99999999);
+    // get date
+    $OrderDate = date("Y-m-d");
 
-
-    // update item
-
-    // $sql = "INSERT INTO Items (ItemName, CategoryID, Price, DiscountRate, Inventory) VALUES('$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
-    // $result = $conn -> query($sql);
-    // if (!$result) {
-    //     printf("Error: %s\n", $conn -> error);
-    // }
-    // else {
-    //     printf("Item added successfully.\n");
-    // }
+    // Add Order to Orders table
+    $sql_add_order = "INSERT INTO Orders (UserID, ShipperID, OrderDate, TrackingNumber) VALUES('$user_name','$shipper_name','$OrderDate', '$tracking_number')";
+    $result = $conn -> query($sql_add_order);
+    if (!$result) {
+        printf("Error adding Order: %s\n", $conn -> error);
+    }
+    else {
+        // now add order details record
+        $OrderID = $conn->insert_id;
+        $sql_add_orderdetail = "INSERT INTO OrderDetails VALUES('$OrderID','$item_name', '$inputOrderQuantity')";
+        $result2 = $conn -> query($sql_add_orderdetail);
+        if (!$result2) {
+          printf("Error adding OrderDetail: %s\n", $conn -> error);
+        }
+        else {
+          printf("OrderDetail added successfully.\n");
+        }
+    }
 }
 ?>
 
