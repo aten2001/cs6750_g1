@@ -119,6 +119,8 @@ mysql_select_db($serverUsername);
 				echo "0 result";
 			}
 			$q = isset($_GET['q'])? htmlspecialchars($_GET['q']) : '';
+			$offset = isset($_GET['offset'])? htmlspecialchars($_GET['offset']) : '';
+			$range = isset($_GET['range'])? htmlspecialchars($_GET['range']) : '';
 			?>
 		<!-- HTML form for selecting table -->
 		<form action = "" method = "get">
@@ -130,6 +132,8 @@ mysql_select_db($serverUsername);
 			endforeach;
 			?>
 			</select>
+			<input type="text" name="offset" value="" placeholder="Input the Start Row" />
+			<input type="text" name="range" value="" placeholder="Input # of Rows to Show" />
 		<input type = "submit" value = "Submit">
 		<form>
     <!-- PHP logic for displaying selected table -->
@@ -137,6 +141,8 @@ mysql_select_db($serverUsername);
     <br>
     <table>
 		<?php
+	    		if (!$offset) {$offset = 1;}
+			if (!$range) {$range = 100;}
 			if($q) {
 				$sql2 = "SHOW COLUMNS FROM ". $tables[$q];
 				//$sql2 = "SHOW COLUMNS FROM users;";
@@ -154,7 +160,7 @@ mysql_select_db($serverUsername);
 					echo "</tr>";
 					echo "</thead>";
 				echo "<tbody>";
-				$sql3 = "SELECT * FROM ". $tables[$q];
+				$sql3 = "SELECT * FROM ". $tables[$q]. " LIMIT ". ($offset - 1). ", ". $range. ";";	
 				//$sql3 = "SELECT * FROM users;";
 				$result3 = mysqli_query($conn, $sql3);
 				if (mysqli_num_rows($result3)) {
