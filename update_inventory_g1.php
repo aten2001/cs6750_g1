@@ -173,7 +173,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     else {
         // now add order details record
         $OrderID = $conn->insert_id;
-        printf("result: %s\n", $OrderID);
         $sql_add_orderdetail = "INSERT INTO OrderDetails VALUES('$OrderID','$item_name', '$inputOrderQuantity')";
         $result2 = $conn -> query($sql_add_orderdetail);
         if (!$result2) {
