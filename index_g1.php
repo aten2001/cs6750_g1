@@ -1,3 +1,25 @@
+<?php
+//-----DB Connection code------
+$servername = "localhost";
+$serverUsername = "lr3hj";                         //computing id
+$serverPassword = "UVCiZHAG";                   //---- your password
+$database = "lr3hj";              // computing id
+////-----LOCAL DB Connection code------
+//$servername = "localhost";
+//$serverUsername = "root";
+//$serverPassword = "+Hdz793241923";
+//$database = "group1_database";
+
+// create connection
+$conn = new mysqli($servername, $serverUsername, $serverPassword, $database);
+// Check connection
+if (!$conn) {
+    die("connection failed: " . mysqli_connect_error());
+        }
+
+mysql_select_db($serverUsername);
+?>
+
 <!DOCTYPE HTML>  
 <html>
 <head>
@@ -11,6 +33,16 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
   <style>
   .error {color: #FF0000;}
+    table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    height: 80px;
+  }
+  table, th, td {
+   border: 1px solid black;
+  }
   /* Referenced from W3Schools - Top Navigation */
     /* Add a black background color to the top navigation */
   .topnav {
@@ -43,10 +75,10 @@
   </style>
 </head>
 <body style="position: relative; 
-	margin: 0 auto;
-	background-image: url(bg.jpg);
-	background-size: 100% 620px;
-	background-repeat: repeat;">  
+    margin: 0 auto;
+    background-image: url(bg.jpg);
+    background-size: 100% 620px;
+    background-repeat: repeat;">  
    <div class="topnav">
       <a class="active" href="index_g1.php">Home</a>
       <a href="add_item_g1.php">Add Item</a>
@@ -56,9 +88,137 @@
   </div> 
   <h2 style="text-align: center;
     display: block;
-  	color: #000066;
-  	font-weight: bold;"> Group 1 CS6750 Project </h2>
+    color: #000066;
+    font-weight: bold;"> Group 1 CS6750 Project </h2>
     <p><h5 style="text-align: center;">Danzhe Huang, Leonard Ramsey, Sicong Cai, Ze Wang</h5></p>
 
+  <div class="content" style="padding-left: 20px; padding-right: 20px;">
+    <h1 style="text-align: left; 
+        display: block;
+        color: #000066;
+        font-weight: bold;">View Records</h1>
+      <hr> 
+      <b style="text-align: left; font-size: 18px;">The ranking among categories</b>
+      <hr>
+      <p></p>
+      <table>
+            <thead>
+            <tr>
+            <td>
+            Category
+            </td>
+            <td>Number Sold
+            </td>
+            </tr>
+            </thead>
+            <tbody>
+        <?php           
+            $sql = "select c.CategoryName, SUM(b.Quantity) from Items a
+                    left join  OrderDetails b 
+                     on a.ItemId = b.ItemID
+                    left join Categories c
+                     on a.CategoryID = c.CategoryID
+                    Group by c.CategoryName
+                    Order by SUM(b.Quantity) DESC;";
+            $result = mysqli_query($conn, $sql);
+            if (mysqli_num_rows($result)) {
+                    $tables = array();
+                    $i = 1;
+                    while($row = mysqli_fetch_assoc($result)) {
+                        $tables[$i] = $row["CategoryName"];
+                        echo "<tr>";
+                            echo "<td>". $row["CategoryName"]. "</td>";
+                            if($row["SUM(b.Quantity)"] == NULL) {
+                                echo "<td>N/A</td>";
+                            } else {
+                                echo "<td>". $row["SUM(b.Quantity)"]. "</td>";
+                            }
+                        echo "</tr>";
+                        $i++;
+
+                    }
+             } else {
+                 echo "0 result";
+             }
+       echo "</tbody>";
+       ?>
+       <?php
+            mysqli_close($conn);
+       ?>
+    </table>
+    <br>
+</div>
+
+  <div class="content" style="padding-left: 20px; padding-right: 20px;">
+    <h1 style="text-align: left; 
+        display: block;
+        color: #000066;
+        font-weight: bold;">View Records</h1>
+      <hr> 
+      <b style="text-align: left; font-size: 18px;">See a certain category</b>
+      <hr>
+       <form method="GET" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+            <select name = "item_category" required>
+            <option value="">Please select a Category</option>
+            <?php
+            foreach($tables as $key => $value):
+            echo '<option value="'.$key.'">'.$value.'</option>';
+            endforeach;
+            ?>
+            </select>
+        <input type = "submit" name="submit" value="SUBMIT">
+       </form>
+    <br>
+    <br>
+    <table>
+            <thead>
+            <tr>
+            <td>
+            ItemName
+            </td>
+            <td>Quantity
+            </td>
+            </tr>
+            </thead>
+       <tbody>
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "GET") {
+                $item_category = $_GET['item_category'];
+                $sql2 = "Select b.CategoryName, a.ItemName, c.Quantity from Items a inner join Categories b 
+                        on a.CategoryID = b.CategoryID
+                        inner join OrderDetails c 
+                        on a.ItemID = c.ItemID
+                        where b.CategoryName = '$item_category'
+                        Order by c.Quantity DESC;";
+                $result2 = mysqli_query($conn, $sql2);
+                if (mysqli_num_rows($result2)) {
+                    $tables2 = array();
+                    $i = 1;
+                    while($row2 = mysqli_fetch_assoc($result2)) {
+                        $tables2[$i] = $row2["ItemName"];
+                        echo "<tr>";
+                            echo "<td>". $row2["ItemName"]. "</td>";
+                            if($row2["Quantity"] == NULL) {
+                                echo "<td>N/A</td>";
+                            } else {
+                                echo "<td>". $row2["Quantity"]. "</td>";
+                            }
+                        echo "</tr>";
+                        $i++;
+
+                    }
+                } else {
+                 echo "0 result";
+                }
+        }
+        echo "</tbody>";
+        ?>
+        <?php
+            mysqli_close($conn);
+        ?>
+    </table>
+    <br>
+ </div>
 </body>
+
 </html>

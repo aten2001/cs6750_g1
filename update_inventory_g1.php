@@ -72,16 +72,6 @@ $nameErr = "";
       background-color: #4CAF50;
       color: white;
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  th {
-    height: 80px;
-  }
-  table, th, td {
-   border: 1px solid black;
-  }
   </style>
 </head>
 <body style="position: relative; 
@@ -107,20 +97,20 @@ $nameErr = "";
 
       <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
 
-        Item:*
+        Name:*
         <br>
-        <select name="inputItemName" id="inputItemName" required>
-          <option value="">Choose an item</option>
-          <?php
-          $sql = "Select ItemName, ItemID from Items";
-          $results = $conn->query($sql);
-          while($row = $results->fetch_assoc()) {
-            ?>
-            <option value="<?php echo $row['ItemID'] ?>"><?php echo $row['ItemName']?></option>
-          <?php 
-          } 
-          ?>
-        </select>
+        <input type="text" name="inputItemName" value="<?php echo $inputItemName;?>" required>
+        <span class="error"> <?php echo $nameErr;?></span>
+        <br>
+
+        Price:*
+        <br>
+        <input type="number" min="0.00" step="0.01" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
+        <br>
+
+        Discount Rate:
+        <br>
+        <input type="number" min="0.00" max="1.00" step="0.01" name="inputItemDiscount" value="<?php echo $inputItemDiscount;?>">
         <br>
 
         Inventory:*
@@ -128,80 +118,55 @@ $nameErr = "";
         <input type="number" min="0" step="1" name="inputItemInventory" value="<?php echo $inputItemInventory;?>" required>
         <br>
         
+        Category:*
+        <br>
+        <select name="item_category" id="id_item_category" required>
+          <option value="">Choose a category</option>
+          <?php
+          $sql = "Select CategoryName, CategoryID from Categories";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
+            ?>
+            <option value="<?php echo $row['CategoryID'] ?>"><?php echo $row['CategoryName']?></option>
+          <?php 
+          } 
+          ?>
+        </select>
+        <br>
  
         <br>
-        <input type="submit" name="submit" value="Update">  
+        <input type="submit" name="submit" value="Insert">  
       </form>
-      <br>
-<!-- process form input/SQL operation -->
+  </div>
+
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
     $inputItemName = $_POST['inputItemName'];
+    $inputItemPrice = $_POST['inputItemPrice'];
+    $inputItemDiscount = $_POST['inputItemDiscount'];
     $inputItemInventory = $_POST['inputItemInventory'];
+    $item_category = $_POST['item_category'];
+    //echo $inputUsername . "<br>";
+    $str = $id_item_category . "\n";
+    echo $str;
+
 
     // update item
 
-    $sql_update = "UPDATE Items SET Inventory = '". $inputItemInventory. "' WHERE ItemID = '". $inputItemName. "'";
-    $result = $conn -> query($sql_update);
-    if (!$result) {
-        printf("Error: %s\n", $conn -> error);
-    }
-    else {
-        printf("Item updated successfully.\n");
-    }
+    // $sql = "INSERT INTO Items (ItemName, CategoryID, Price, DiscountRate, Inventory) VALUES('$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
+    // $result = $conn -> query($sql);
+    // if (!$result) {
+    //     printf("Error: %s\n", $conn -> error);
+    // }
+    // else {
+    //     printf("Item added successfully.\n");
+    // }
 }
 ?>
-<table>
-<!-- show items table -->
-<?php
-        $sql2 = "SHOW COLUMNS FROM Items";
-        //$sql2 = "SHOW COLUMNS FROM users;";
-        $result2 = mysqli_query($conn, $sql2);
-        $num_of_cols = 1;
-        if (mysqli_num_rows($result2) > 0) {
-          $columns = array();
-          echo "<thead>";
-          echo "<tr>";
-          while ($row = mysqli_fetch_assoc($result2)) {
-            $columns[$num_of_cols] = $row["Field"];
-            echo "<td>". $row["Field"]. "</td>";
-            $num_of_cols++;
-          }
-          echo "</tr>";
-          echo "</thead>";
-        echo "<tbody>";
-        $sql3 = "SELECT * FROM Items";
-        //$sql3 = "SELECT * FROM users;";
-        $result3 = mysqli_query($conn, $sql3);
-        if (mysqli_num_rows($result3)) {
-          while($row = mysqli_fetch_assoc($result3)) {
-            $j = 1;
-            echo "<tr>";
-            while ($j <= $num_of_cols - 1) {
-              //echo $columns[$j]. ": ". $row[$columns[$j]]. " ";
-              if($row[$columns[$j]] == NULL) {
-                echo "<td>N/A</td>";
-              } else {
-                echo "<td>". $row[$columns[$j]]. "</td>";
-              }
-              $j++;
-            }
-            echo "</tr>";
-          }
-        }
-        } else {
-          echo "0 result";
-        }
-        echo "</tbody>";
-?>
-<!-- close database connection -->
+
 <?php
 mysqli_close($exit); // HINT: This statement closes the connection with the database
 
 ob_end_flush();
 ?>
-</table>
-</div>
-</body>
-</html>

@@ -152,7 +152,7 @@ $nameErr = "";
         <br>
  
         <br>
-        <input type="submit" name="submit" value="Submit">  
+        <input type="submit" name="submit" value="Insert">  
       
 
 
@@ -185,14 +185,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $result2 = $conn -> query($sql_add_orderdetail);
         if (!$result2) {
           printf("Error adding OrderDetail: %s\n", $conn -> error);
-          $sql_delete_order = "DELETE FROM Orders WHERE OrderID = '". $OrderID. "'";
-          $result3 = $conn -> query($sql_delete_order);
-          if (!$result3) {
-            printf("Error: %s\n", $conn -> error);
-          }
-          else {
-            printf("Due to this error, the order was removed.");
-          }
         }
         else {
           printf("OrderDetail added successfully.\n");
