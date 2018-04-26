@@ -3,10 +3,10 @@
 
 // Ze
 //-----DB Connection code------
-// $servername = "localhost";
-// $serverUsername = "zw6aw";                         //computing id
-// $serverPassword = "5WrBeQbh";                   //---- your password
-// $database = "zw6aw";              // computing id
+$servername = "localhost";
+$serverUsername = "zw6aw";                         //computing id
+$serverPassword = "5WrBeQbh";                   //---- your password
+$database = "zw6aw";              // computing id
 // Leo
 //-----DB Connection code------
 $servername = "localhost";
@@ -21,7 +21,7 @@ $conn = new mysqli($servername, $serverUsername, $serverPassword, $database);
 // Check connection
 if ($conn->connect_error)
 {
-	die ("Connection failed: ". $conn->connect_error);
+  die ("Connection failed: ". $conn->connect_error);
 }
 mysql_select_db($serverUsername);
 
@@ -78,84 +78,113 @@ $nameErr = "";
       <a class="active" href="update_inventory_g1.php">Inventory</a>
       <a href="view_tables_g1.php">View Tables</a>
   </div> 
-<h2 style="text-align: center; 
-  font-family: 'Josefin Sans', cursive;
-  display: block;
-	color: #000066;
-	font-size: 58px;
-	font-weight: bold;"> Update Inventory </h2>
-<hr> 
-<h2 style="text-align: center; font-family: 'Josefin Sans', cursive; color: #FF6600;font-size: 30px;"> Operations Here</h2>
-<hr>
+  <div class="content" style="padding-left: 20px; padding-right: 20px;">
+      <h1 style="text-align: left; 
+        display: block;
+        color: #000066;
+        font-weight: bold;">Update Inventory</h1>
+      <hr> 
+      <b style="text-align: left; font-size: 18px;">Make an order to update the inventory, or select an item and change it's inventory amount.</b>
+      <hr>
+      <table>
+      <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
 
-<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
+        User:*
+        <br>
+        <select name="user_name" id="id_user_name" required>
+          <option value="">Choose a user</option>
+          <?php
+          $sql = "Select Username, UserID from Users";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
+            ?>
+            <option value="<?php echo $row['UserID'] ?>"><?php echo $row['Username']?></option>
+          <?php 
+          } 
+          ?>
+        </select>
+        <br>
 
-  Name:
-  <br>
-  <input type="text" name="inputUsername" value="<?php echo $inputUsername;?>">
-  <span class="error"> <?php echo $nameErr;?></span>
-  <br>
+        Item:*
+        <br>
+        <select name="item_name" id="id_item_name" required>
+          <option value="">Choose an item</option>
+          <?php
+          $sql = "Select ItemName, ItemID from Items";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
+            ?>
+            <option value="<?php echo $row['ItemID'] ?>"><?php echo $row['ItemName']?></option>
+          <?php 
+          } 
+          ?>
+        </select>
+        <br>
 
-  Password:
-  <br>
-  <input type="text" name="inputPassword" value="<?php echo $inputPassword;?>">
-  <span class="error"> <?php echo $passErr;?></span>
-  <br>
+        Quantity:*
+        <br>
+        <input type="number" min="0" step="1" name="inputOrderQuantity" value="<?php echo $inputOrderQuantity;?>" required>
+        <br>
 
-  <br>
-  <input type="submit" name="submit" value="Submit">  
-</form>
+
+        Shipper:*
+        <br>
+        <select name="shipper_name" id="id_shipper_name" required>
+          <option value="">Choose a shipper</option>
+          <?php
+          $sql = "Select ShipperName, ShipperID from Shippers";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
+            ?>
+            <option value="<?php echo $row['ShipperID'] ?>"><?php echo $row['ShipperName']?></option>
+          <?php 
+          } 
+          ?>
+        </select>
+        <br>
+ 
+        <br>
+        <input type="submit" name="submit" value="Insert">  
+      
+
+
+      </form>
+    </table>
+  </div>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
-	$inputUsername = $_POST["inputUsername"];
-	$inputPassword = $_POST["inputPassword"];
-	//echo $inputUsername . "<br>";
+    $inputOrderQuantity = $_POST['inputOrderQuantity'];
+    $item_name = $_POST['item_name'];
+    $user_name = $_POST['user_name'];
+    $shipper_name = $_POST['shipper_name'];
+    // get tracking number (randomly generated 8 digit number)
+    $tracking_number = rand(10000000, 99999999);
+    // get date
+    $OrderDate = date("Y-m-d");
 
-}
-
-
-//$sql = "Select * from Login WHERE username = \"" . $inputUsername . "\"";  
-// HINT: your SQL Query to get the row with given username
-// Is it Select or Insert or Delete or Alter? 
-
-$sql = "Select OrderID from Orders WHERE TrackingNumber > 500";
-
-
-$result = $conn->query($sql);
-
-
-if ($result->num_rows > 0) 
-{
-	
-    // output data of each row -- here we have one or 0 rows because username is primary key
-    while($row = $result->fetch_assoc()) 
-    {
-        $str = $row["OrderID"] . "\n";
-        echo $str;
+    // Add Order to Orders table
+    $sql_add_order = "INSERT INTO Orders (UserID, ShipperID, OrderDate, TrackingNumber) VALUES('$user_name','$shipper_name','$OrderDate', '$tracking_number')";
+    $result = $conn -> query($sql_add_order);
+    if (!$result) {
+        printf("Error adding Order: %s\n", $conn -> error);
     }
-} 
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-  if($pwd == $inputPassword)
-    //HINT: Which variable did you use to store your password obtained from the SQL query 
-  {
-  echo "Connection success!";
-  // you can add code to jump to welcome page
-  }
-  else
-  {
-  echo "Password or username is incorrect";
-  }
+    else {
+        // now add order details record
+        $OrderID = $conn->insert_id;
+        printf("result: %s\n", $OrderID);
+        $sql_add_orderdetail = "INSERT INTO OrderDetails VALUES('$OrderID','$item_name', '$inputOrderQuantity')";
+        $result2 = $conn -> query($sql_add_orderdetail);
+        if (!$result2) {
+          printf("Error adding OrderDetail: %s\n", $conn -> error);
+        }
+        else {
+          printf("OrderDetail added successfully.\n");
+        }
+    }
 }
-
-
 ?>
-
-
 
 <?php
 mysqli_close($exit); // HINT: This statement closes the connection with the database

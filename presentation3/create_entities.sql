@@ -10,6 +10,7 @@ UserID INT NOT NULL,
 Gender VARCHAR(2),
 State VARCHAR(20),
 Country VARCHAR(20),
+Username VARCHAR(255) DEFAULT '',
 PRIMARY KEY (UserID)
 );
 

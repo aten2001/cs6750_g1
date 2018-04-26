@@ -1,14 +1,14 @@
 -- fake user
-insert into Users (UserID, Gender, State, Country) values(1, "M", "VA", "USA");
-insert into Users (UserID, Gender, State, Country) values(2, "F", "VA", "USA");
-insert into Users (UserID, Gender, State, Country) values(3, "M", "CA", "USA");
-insert into Users (UserID, Gender, State, Country) values(4, "F", "CA", "USA");
-insert into Users (UserID, Gender, State, Country) values(5, "F", "VA", "USA");
-insert into Users (UserID, Gender, State, Country) values(6, "M", "TX", "USA");
-insert into Users (UserID, Gender, State, Country) values(7, "F", "TX", "USA");
-insert into Users (UserID, Gender, State, Country) values(8, "M", "VA", "USA");
-insert into Users (UserID, Gender, State, Country) values(9, "F", "CO", "USA");
-insert into Users (UserID, Gender, State, Country) values(10, "M", "WA", "USA");
+insert into Users (UserID, Gender, State, Country, Username) values(1, "M", "VA", "USA", "user1");
+insert into Users (UserID, Gender, State, Country, Username) values(2, "F", "VA", "USA", "user2");
+insert into Users (UserID, Gender, State, Country, Username) values(3, "M", "CA", "USA", "user3");
+insert into Users (UserID, Gender, State, Country, Username) values(4, "F", "CA", "USA", "user4");
+insert into Users (UserID, Gender, State, Country, Username) values(5, "F", "VA", "USA", "user5");
+insert into Users (UserID, Gender, State, Country, Username) values(6, "M", "TX", "USA", "user6");
+insert into Users (UserID, Gender, State, Country, Username) values(7, "F", "TX", "USA", "user7");
+insert into Users (UserID, Gender, State, Country, Username) values(8, "M", "VA", "USA", "user8");
+insert into Users (UserID, Gender, State, Country, Username) values(9, "F", "CO", "USA", "user9");
+insert into Users (UserID, Gender, State, Country, Username) values(10, "M", "WA", "USA", "user10");
 
 insert into Profiles (UserID, FirstName, LastName, Email, Phone, Street, City, ZipCode) values (1, "Bianka", "Faunt", "bfaunt0@barnesandnoble.com", "622-299-0564", "444 David Plaza", "La Charité-sur-Loire", "58404");
 insert into Profiles (UserID, FirstName, LastName, Email, Phone, Street, City, ZipCode) values (2, "Marlon", "Forsyde", "mforsyde1@hc360.com", "277-251-1638", "6052 Lien Park", "Nyala", null);

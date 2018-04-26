@@ -18,11 +18,15 @@ $database = "lr3hj";              // computing id
 //$database = "group1_database";
 
 // create connection
-$conn = mysqli_connect($servername, $serverUsername, $serverPassword, $database);
+// $conn = mysqli_connect($servername, $serverUsername, $serverPassword, $database);
+$conn = new mysqli($servername, $serverUsername, $serverPassword, $database);
 // Check connection
 if (!$conn) {
 	die("connection failed: " . mysqli_connect_error());
 		}
+
+mysql_select_db($serverUsername);
+
 ?>
 <!DOCTYPE html> 
 <html> 
@@ -91,7 +95,7 @@ if (!$conn) {
 				$i = 1;
 				$tables = array();
 				while($row = mysqli_fetch_assoc($result1)) {
-					$tables[$i] = $row["Tables_in_group1_database"];
+					$tables[$i] = $row["Tables_in_lr3hj"];
 					$i++;
 				}
 			} else {

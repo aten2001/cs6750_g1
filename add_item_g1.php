@@ -146,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     //adding item should be adding record to the item table
     //$sql = "INSERT INTO Items VALUES(DEFAULT, $inputItemName, $item_category, $inputItemPrice, $inputItemDiscount, $inputItemInventory)"
-    $sql = "INSERT INTO Items VALUES('$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
+    $sql = "INSERT INTO Items (ItemName, CategoryID, Price, DiscountRate, Inventory) VALUES('$inputItemName','$item_category','$inputItemPrice', '$inputItemDiscount','$inputItemInventory')";
     $result = $conn -> query($sql);
     if (!$result) {
         printf("Error: %s\n", $conn -> error);
