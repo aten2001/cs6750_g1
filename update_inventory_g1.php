@@ -1,6 +1,4 @@
 <?php
-
-
 // Ze
 //-----DB Connection code------
 $servername = "localhost";
@@ -13,9 +11,6 @@ $servername = "localhost";
 $serverUsername = "lr3hj";                         //computing id
 $serverPassword = "UVCiZHAG";                   //---- your password
 $database = "lr3hj";              // computing id
-
-
-
 // Create connection
 $conn = new mysqli($servername, $serverUsername, $serverPassword, $database);
 // Check connection
@@ -24,10 +19,8 @@ if ($conn->connect_error)
   die ("Connection failed: ". $conn->connect_error);
 }
 mysql_select_db($serverUsername);
-
 // ---- VARIABLE DECLARATIONS ----
 $nameErr = "";
-
 ?>
 
 <!DOCTYPE HTML>  
@@ -42,10 +35,6 @@ $nameErr = "";
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
   <style>
-  i {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
   .error {color: #FF0000;}
     /* Referenced from W3Schools - Top Navigation */
     /* Add a black background color to the top navigation */
@@ -54,7 +43,6 @@ $nameErr = "";
       overflow: hidden;
       width: 100%;
   }
-
   /* Style the links inside the navigation bar */
   .topnav a {
       float: left;
@@ -64,17 +52,25 @@ $nameErr = "";
       text-decoration: none;
       font-size: 17px;
   }
-
   /* Change the color of links on hover */
   .topnav a:hover {
       background-color: #ddd;
       color: black;
   }
-
   /* Add a color to the active/current link */
   .topnav a.active {
       background-color: #4CAF50;
       color: white;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    height: 80px;
+  }
+  table, th, td {
+   border: 1px solid black;
   }
   </style>
 </head>
@@ -101,20 +97,20 @@ $nameErr = "";
 
       <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
 
-        Name:*
+        Item:*
         <br>
-        <input type="text" name="inputItemName" value="<?php echo $inputItemName;?>" required>
-        <span class="error"> <?php echo $nameErr;?></span>
-        <br>
-
-        Price:*
-        <br>
-        <input type="number" min="0.00" step="0.01" name="inputItemPrice" value="<?php echo $inputItemPrice;?>" required>
-        <br>
-
-        Discount Rate:
-        <br>
-        <input type="number" min="0.00" max="1.00" step="0.01" name="inputItemDiscount" value="<?php echo $inputItemDiscount;?>">
+        <select name="inputItemName" id="inputItemName" required>
+          <option value="">Choose an item</option>
+          <?php
+          $sql = "Select ItemName, ItemID from Items";
+          $results = $conn->query($sql);
+          while($row = $results->fetch_assoc()) {
+            ?>
+            <option value="<?php echo $row['ItemID'] ?>"><?php echo $row['ItemName']?></option>
+          <?php 
+          } 
+          ?>
+        </select>
         <br>
 
         Inventory:*
@@ -122,54 +118,77 @@ $nameErr = "";
         <input type="number" min="0" step="1" name="inputItemInventory" value="<?php echo $inputItemInventory;?>" required>
         <br>
         
-        Category:*
-        <br>
-        <select name="item_category" id="id_item_category" required>
-          <option value="">Choose a category</option>
-          <?php
-          $sql = "Select CategoryName, CategoryID from Categories";
-          $results = $conn->query($sql);
-          while($row = $results->fetch_assoc()) {
-            ?>
-            <option value="<?php echo $row['CategoryID'] ?>"><?php echo $row['CategoryName']?></option>
-          <?php 
-          } 
-          ?>
-        </select>
-        <br>
  
         <br>
-        <input type="submit" name="submit" value="Insert">  
+        <input type="submit" name="submit" value="Update">  
       </form>
-  </div>
-
+      <br>
+<!-- process form input/SQL operation -->
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
 {
     $inputItemName = $_POST['inputItemName'];
-    $inputItemPrice = $_POST['inputItemPrice'];
-    $inputItemDiscount = $_POST['inputItemDiscount'];
     $inputItemInventory = $_POST['inputItemInventory'];
-    $item_category = $_POST['item_category'];
-    //echo $inputUsername . "<br>";
-    $str = $id_item_category . "\n";
-    echo $str;
-
-
     // update item
     $sql_update = "UPDATE Items SET Inventory = '". $inputItemInventory. "' WHERE ItemID = '". $inputItemName. "'";
     $result = $conn -> query($sql_update);
     if (!$result) {
-        printf("<p><i>Error: %s</i></p>\n", $conn -> error);
+        printf("Error: %s\n", $conn -> error);
     }
     else {
-        printf("<p><i>Item updated successfully.</i></p>\n");
+        printf("Item updated successfully.\n");
     }
 }
 ?>
-
+<table>
+<!-- show items table -->
+<?php
+        $sql2 = "SHOW COLUMNS FROM Items";
+        //$sql2 = "SHOW COLUMNS FROM users;";
+        $result2 = mysqli_query($conn, $sql2);
+        $num_of_cols = 1;
+        if (mysqli_num_rows($result2) > 0) {
+          $columns = array();
+          echo "<thead>";
+          echo "<tr>";
+          while ($row = mysqli_fetch_assoc($result2)) {
+            $columns[$num_of_cols] = $row["Field"];
+            echo "<td>". $row["Field"]. "</td>";
+            $num_of_cols++;
+          }
+          echo "</tr>";
+          echo "</thead>";
+        echo "<tbody>";
+        $sql3 = "SELECT * FROM Items";
+        //$sql3 = "SELECT * FROM users;";
+        $result3 = mysqli_query($conn, $sql3);
+        if (mysqli_num_rows($result3)) {
+          while($row = mysqli_fetch_assoc($result3)) {
+            $j = 1;
+            echo "<tr>";
+            while ($j <= $num_of_cols - 1) {
+              //echo $columns[$j]. ": ". $row[$columns[$j]]. " ";
+              if($row[$columns[$j]] == NULL) {
+                echo "<td>N/A</td>";
+              } else {
+                echo "<td>". $row[$columns[$j]]. "</td>";
+              }
+              $j++;
+            }
+            echo "</tr>";
+          }
+        }
+        } else {
+          echo "0 result";
+        }
+        echo "</tbody>";
+?>
+<!-- close database connection -->
 <?php
 mysqli_close($exit); // HINT: This statement closes the connection with the database
-
 ob_end_flush();
 ?>
+</table>
+</div>
+</body>
+</html>
