@@ -96,17 +96,18 @@ $nameErr = "";
    <div class="topnav">
       <a href="index_g1.php">Home</a>
       <a href="add_item_g1.php">Add Item</a>
-      <a class="active" href="update_inventory_g1.php">Inventory</a>
+      <a href="update_inventory_g1.php">Inventory</a>
       <a href="manage_orders_g1.php">Orders</a>
       <a href="view_tables_g1.php">View Tables</a>
+      <a class="active" href="user_orders_g1.php">User Order History</a>
   </div> 
   <div class="content" style="padding-left: 20px; padding-right: 20px;">
       <h1 style="text-align: left; 
         display: block;
         color: #000066;
-        font-weight: bold;">Update Inventory</h1>
+        font-weight: bold;">View User Order History</h1>
       <hr> 
-      <b style="text-align: left; font-size: 18px;">Fill out the form below to update an item's inventory.</b>
+      <b style="text-align: left; font-size: 18px;">Select a user to view their order history.</b>
       <hr>
 
       <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
@@ -114,13 +115,13 @@ $nameErr = "";
         User:*
         <br>
         <select name="inputUsername" id="inputUsername" required>
-          <option value="">Choose an item</option>
+          <option value="">Choose an user</option>
           <?php
           $sql = "Select Username, UserID from Users";
           $results = $conn->query($sql);
           while($row = $results->fetch_assoc()) {
             ?>
-            <option value="<?php echo $row['UserID'] ?>"><?php echo $row['Username']?></option>
+            <option value="<?php echo $row['Username'] ?>"><?php echo $row['Username']?></option>
           <?php 
           } 
           ?>
@@ -128,27 +129,28 @@ $nameErr = "";
         <br>
  
         <br>
-        <input type="submit" name="submit" value="Update">  
+        <input type="submit" name="submit" value="View">  
       </form>
       <br>
-<!-- show user orderse table -->
+<!-- show user orders table -->
 <?php
-      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($_POST['inputUsername']) {
+        // add table/table header
         echo "<table>
-  <thead>
-    <tr>
-      <td>Username</td>
-      <td>ItemName</td>
-      <td>Price</td>
-      <td>Quantity</td>
-      <td>OrderDate</td>
-    </tr>
-  </thead>
-  <tbody>";
+          <thead>
+            <tr>
+              <td>Username</td>
+              <td>ItemName</td>
+              <td>Price</td>
+              <td>Quantity</td>
+              <td>OrderDate</td>
+            </tr>
+          </thead>
+          <tbody>";
           $inputUsername = $_POST['inputUsername'];
 
         // get user's order history
-        $sql3 = "SELECT Username, ItemName, Price, Quantity, OrderDate FROM (SELECT Username, ItemName, Price, Quantity, OrderDate FROM Users u LEFT JOIN Orders o ON u.UserID = o.UserID LEFT JOIN OrderDetails od ON o.OrderID = od.OrderID LEFT JOIN Items i ON od.ItemID = i.ItemID) t WHERE Username = '". $inputUsername. "'";
+        $sql3 = "Select Username, ItemName, Price, Quantity, OrderDate FROM (SELECT Username, ItemName, Price, Quantity, OrderDate FROM Users u LEFT JOIN Orders o ON u.UserID = o.UserID LEFT JOIN OrderDetails od ON o.OrderID = od.OrderID LEFT JOIN Items i ON od.ItemID = i.ItemID) t WHERE Username = '". $inputUsername. "'";
         $result3 = mysqli_query($conn, $sql3);
         if (mysqli_num_rows($result3)) {
           while($row = mysqli_fetch_assoc($result3)) {
@@ -157,42 +159,42 @@ $nameErr = "";
             while ($j <= 5) {
               //echo $columns[$j]. ": ". $row[$columns[$j]]. " ";
               if ($j == 1) {
-                echo $row;
-                // if($row["Username"] == NULL) {
-              //     echo "<td>N/A</td>";
-                // } 
-                // else {
-                  // echo "<td>". $row["Username"]]. "</td>";
-                // }
+                // echo $row;
+                if($row["Username"] == NULL) {
+                  echo "<td>N/A</td>";
+                } 
+                else {
+                  echo "<td>". $row["Username"]. "</td>";
+                }
               }
-        //       else if ($j == 2) {
-        //         if($row["ItemName"] == NULL) {
-        //           echo "<td>N/A</td>";
-        //         } else {
-        //           echo "<td>". $row["ItemName"]. "</td>";
-        //         }
-        //       }
-        //       else if ($j == 3) {
-        //         if($row["Price"] == NULL) {
-        //           echo "<td>N/A</td>";
-        //         } else {
-        //           echo "<td>". $row["Price"]. "</td>";
-        //         }
-        //       }
-        //       else if ($j == 4) {
-        //         if($row["Quantity"] == NULL) {
-        //           echo "<td>N/A</td>";
-        //         } else {
-        //           echo "<td>". $row["Quantity"]. "</td>";
-        //         }
-        //       }
-        //       else { // $j == 5
-        //         if($row["OrderDate"] == NULL) {
-        //           echo "<td>N/A</td>";
-        //         } else {
-        //           echo "<td>". $row["OrderDate"]. "</td>";
-        //         }
-        //       }
+              else if ($j == 2) {
+                if($row["ItemName"] == NULL) {
+                  echo "<td>N/A</td>";
+                } else {
+                  echo "<td>". $row["ItemName"]. "</td>";
+                }
+              }
+              else if ($j == 3) {
+                if($row["Price"] == NULL) {
+                  echo "<td>N/A</td>";
+                } else {
+                  echo "<td>". $row["Price"]. "</td>";
+                }
+              }
+              else if ($j == 4) {
+                if($row["Quantity"] == NULL) {
+                  echo "<td>N/A</td>";
+                } else {
+                  echo "<td>". $row["Quantity"]. "</td>";
+                }
+              }
+              else { // $j == 5
+                if($row["OrderDate"] == NULL) {
+                  echo "<td>N/A</td>";
+                } else {
+                  echo "<td>". $row["OrderDate"]. "</td>";
+                }
+              }
               $j++;
             }
             echo "</tr>";

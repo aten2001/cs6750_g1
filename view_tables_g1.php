@@ -87,6 +87,7 @@ mysql_select_db($serverUsername);
       <a href="update_inventory_g1.php">Inventory</a>
       <a href="manage_orders_g1.php">Orders</a>
       <a class="active" href="view_tables_g1.php">View Tables</a>
+      <a href="user_orders_g1.php">User Order History</a>
   </div> 
   <div class="content" style="padding-left: 20px; padding-right: 20px;">
     <h1 style="text-align: left; 
