@@ -85,7 +85,6 @@ mysql_select_db($serverUsername);
       <a href="update_inventory_g1.php">Inventory</a>
       <a href="manage_orders_g1.php">Orders</a>
       <a href="view_tables_g1.php">View Tables</a>
-      <a href="user_orders_g1.php">User Order History</a>
   </div> 
   <h2 style="text-align: center;
     display: block;
@@ -195,7 +194,7 @@ mysql_select_db($serverUsername);
                         on a.ItemID = c.ItemID
                         where b.CategoryName = '". $item_category. "'
                         GROUP BY a.ItemName
-                        Order by c.Quantity DESC";
+                        Order by SUM(c.Quantity) DESC";
                         
                 $result2 = mysqli_query($conn, $sql2);
                 if (mysqli_num_rows($result2)) {
